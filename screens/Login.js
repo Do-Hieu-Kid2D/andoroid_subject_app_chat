@@ -13,11 +13,13 @@ import {
 import React, {useState} from 'react';
 
 import {frontSize as sizeFont, images, colors, texts} from '../constants/index';
-import Login from './Login';
+import UITab from '../navigation/UITab';
+import Register from './Register';
 
-function Register(props) {
+function Login(props) {
     const [isFocused, setIsFocused] = useState(false);
     const [isFocused1, setIsFocused1] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     const handlePress = () => {
         Keyboard.dismiss(); // Ẩn bàn phím khi người dùng chạm vào vùng không phải là TextInput
@@ -38,11 +40,19 @@ function Register(props) {
         setIsFocused1(false);
     };
 
-    const handleLogin = () => {
-        navigate(Login);
-    };
     const handleRegister = () => {
-        Alert.alert('handleRegister');
+        navigate(Register);
+    };
+    const handleLogin = () => {
+        navigate(UITab);
+    };
+
+    const handleRememberMePress = () => {
+        setRememberMe(!rememberMe);
+    };
+
+    const handleForgotPasswordPress = () => {
+        Alert.alert('handleForgotPasswordPress');
     };
 
     // Navigation
@@ -71,7 +81,7 @@ function Register(props) {
                         style={{
                             height: 50,
                             // backgroundColor: 'red',
-                            // marginTop: 20,
+                            marginTop: 20,
                         }}>
                         <Text
                             style={{
@@ -83,7 +93,7 @@ function Register(props) {
                                 // backgroundColor: 'yellow',
                                 textAlign: 'center',
                             }}>
-                            Register an Account
+                            Already have an Account!
                         </Text>
                     </View>
                     <View style={styles.container}>
@@ -115,20 +125,30 @@ function Register(props) {
                             secureTextEntry={true}
                             onFocus={handleFocus1}
                             onBlur={handleBlur1}></TextInput>
-                        <Text style={styles.labeInput}>Confirm Password:</Text>
-                        <TextInput
-                            style={[
-                                styles.inputText,
-                                isFocused1 && {
-                                    borderColor: colors.MAIN_COLOR,
-                                    borderWidth: 2,
-                                },
-                            ]}
-                            placeholder="Re-enter password"
-                            placeholderTextColor={colors.PLACEHOLDER}
-                            secureTextEntry={true}
-                            onFocus={handleFocus1}
-                            onBlur={handleBlur1}></TextInput>
+                    </View>
+
+                    <View style={styles2NUT.container}>
+                        <TouchableOpacity
+                            onPress={handleRememberMePress}
+                            style={styles2NUT.rememberMeButton}>
+                            {rememberMe ? (
+                                <Text style={styles2NUT.rememberMeTextChecked}>
+                                    ☑ Remember me
+                                </Text>
+                            ) : (
+                                <Text
+                                    style={styles2NUT.rememberMeTextUnchecked}>
+                                    ☐ Remember me
+                                </Text>
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={handleForgotPasswordPress}
+                            style={styles2NUT.forgotPasswordButton}>
+                            <Text style={styles2NUT.forgotPasswordText}>
+                                Forgot Password
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                     <TouchableOpacity style={styles.button}>
@@ -141,17 +161,24 @@ function Register(props) {
                                     color: 'white',
                                 },
                             ]}
-                            onPress={handleRegister}>
-                            Đăng ký
+                            onPress={handleLogin}>
+                            Đăng nhập
                         </Text>
                     </TouchableOpacity>
-
+                    {/* <Text
+                        style={{
+                            color: 'red',
+                        }}>
+                        {' '}
+                        REMENBER IS
+                        {JSON.stringify(rememberMe)}
+                    </Text> */}
                     <View
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            paddingTop: 8,
+                            paddingTop: 15,
                         }}>
                         <Text
                             style={[
@@ -163,7 +190,7 @@ function Register(props) {
                                     color: colors.LETTER,
                                 },
                             ]}>
-                            Already have an Account?
+                            New user?
                         </Text>
                         <TouchableOpacity>
                             <Text
@@ -176,12 +203,11 @@ function Register(props) {
                                         paddingLeft: 7,
                                     },
                                 ]}
-                                onPress={handleLogin}>
-                                Login now
+                                onPress={handleRegister}>
+                                Register now
                             </Text>
                         </TouchableOpacity>
                     </View>
-
                     <View
                         style={{
                             // backgroundColor: 'purple',
@@ -230,6 +256,34 @@ function Register(props) {
     );
 }
 
+const styles2NUT = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        marginHorizontal: 12,
+        marginVertical: 8,
+    },
+    rememberMeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    rememberMeTextChecked: {
+        fontSize: 16,
+        color: colors.MAIN_COLOR,
+    },
+    rememberMeTextUnchecked: {
+        fontSize: 16,
+        color: 'gray',
+    },
+    forgotPasswordButton: {},
+    forgotPasswordText: {
+        fontSize: 16,
+        color: 'gray',
+    },
+});
+
 const styles = StyleSheet.create({
     container: {
         marginTop: 10,
@@ -243,7 +297,7 @@ const styles = StyleSheet.create({
     },
     inputText: {
         width: '95%',
-        height: 45,
+        height: 50,
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 10,
@@ -266,4 +320,4 @@ const styles = StyleSheet.create({
     gach: {height: 1, backgroundColor: 'black', flex: 1},
 });
 
-export default Register;
+export default Login;
