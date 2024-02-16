@@ -15,8 +15,9 @@ import {
     getDatabase,
     ref as firebaseDatabaseRef,
     set as firebaseSet,
+    update as firebaseUpdate,
     child,
-    get,
+    get as firebaseGet,
     onValue,
 } from 'firebase/database';
 
@@ -47,7 +48,8 @@ export {
     firebaseDatabaseRef,
     sendEmailVerification,
     child,
-    get,
+    firebaseGet,
     onValue, //reload when online DB changed
     signInWithEmailAndPassword,
+    firebaseUpdate,
 };

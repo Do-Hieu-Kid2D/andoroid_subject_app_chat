@@ -21,4 +21,6 @@ export default {
     guest: require('../asset/icon/guest.png'),
     door: require('../asset/icon/door.png'),
     fingerprint: require('../asset/icon/fingerprint.png'),
+    like: require('../asset/icon/like.png'),
+    valentine: require('../asset/icon/valentine.png'),
 };

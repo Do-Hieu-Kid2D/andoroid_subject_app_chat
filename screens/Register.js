@@ -12,12 +12,20 @@ import {
     FlatList,
 } from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
     auth,
     firebaseDatabase,
     createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseSet,
+    firebaseDatabaseRef,
     sendEmailVerification,
+    child,
+    firebaseGet,
+    onValue, //reload when online DB changed
+    signInWithEmailAndPassword,
 } from '../firebase/firebase';
 import {frontSize as sizeFont, images, colors, texts} from '../constants/index';
 import Login from './Login';
@@ -72,24 +80,51 @@ function Register(props) {
         navigate(Login);
     };
     const handleRegister = () => {
-        console.log('handleRegister: ', email, ' ', password);
+        console.log('=======> handleRegister: ', email, ' ', password);
         createUserWithEmailAndPassword(auth, email, password)
             .then(userCredential => {
                 const userNowRegister = userCredential.user;
                 sendEmailVerification(userNowRegister).then(() => {
                     // setIsNewUser(true);
                     setOkeModalVisible(true);
-
-                    console.log('=====> sendEmailVerification');
+                    console.log('=====>??? sendEmailVerification');
                 });
-                console.log(
-                    'VỪA ĐK 1 USER MỚI userNowRegister: ',
-                    userNowRegister,
-                );
+                console.log('=====>OKE: VỪA ĐK 1 USER MỚI userNowRegister: ');
+                AsyncStorage.setItem('user', JSON.stringify(userNowRegister))
+                    .then(() => {
+                        console.log(
+                            '=====>OKE: SET USERNEW VỪA ĐĂNG KÝ VÀO AsyncStorage THÀNH CÔNG',
+                        );
+                    })
+                    .catch(() => {
+                        console.log(
+                            '=====>ERROR: SET USER NEW VỪA ĐĂNG KÝ VÀO AsyncStorage K ĐƯỢC ',
+                        );
+                    });
+                // save data to firebase
+                console.log('=====>OKE: LƯU USER VÀO DB :', userNowRegister);
+                const userId = userNowRegister.uid;
+                const path = `users/${userId}`;
+                firebaseSet(firebaseDatabaseRef(firebaseDatabase, path), {
+                    email: userNowRegister.email,
+                    emailVerified: userNowRegister.emailVerified,
+                    accessToken: userNowRegister.accessToken,
+                    userId: userNowRegister.uid,
+                })
+                    .then(() => {
+                        console.log(
+                            '====>OKE: ĐÃ LƯU USER THÀNH CÔNG KHI REGISTER',
+                        );
+                    })
+                    .catch(() => {
+                        console.log(
+                            '======>ERROR: K THỂ LƯU USER KHI REGISTER',
+                        );
+                    });
             })
             .catch(error => {
                 console.log(
-                    "====> can't not Register, error: ",
+                    '====>ERROR: KHÔNG THỂ ĐĂNG KÝ: ',
                     error.message,
                     ' CODE ERROR:',
                     error.code,

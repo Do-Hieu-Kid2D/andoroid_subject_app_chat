@@ -19,6 +19,7 @@ import {
     createUserWithEmailAndPassword,
     onAuthStateChanged,
     firebaseSet,
+    firebaseUpdate,
     firebaseDatabaseRef,
     sendEmailVerification,
     child,
@@ -191,57 +192,42 @@ const MainScreen = props => {
                 // const currentUser = auth.currentUser;
                 currentUser.reload().then(function () {
                     console.log(
-                        ' RELOAD USER ===> USER emailVerified = ',
+                        '=====> RELOAD USER ===> USER CHECK emailVerified = ',
                         currentUser.emailVerified,
                         ' thằng ',
                         currentUser.email,
                     );
-                    console.log(
-                        ' LƯU USER VÀO DB : vì khi đăng ký thì thằng này lưu hộ ==========> ',
-                        currentUser,
-                    );
-                    const userId = currentUser.uid;
-                    const path = `users/${userId}`;
-                    AsyncStorage.setItem('user', JSON.stringify(currentUser));
-                    // save data to firebase
-                    firebaseSet(firebaseDatabaseRef(firebaseDatabase, path), {
-                        email: currentUser.email,
-                        emailVerified: currentUser.emailVerified,
-                        accessToken: currentUser.accessToken,
-                        userId: currentUser.uid,
-                    })
-                        .then(() => {
-                            console.log(
-                                '====> ĐÃ LƯU USER THÀNH CÔNG MAIN SCREEN',
-                            );
-                        })
-                        .catch(() => {
-                            console.log('K THỂ LƯU USER ');
-                        });
                     if (currentUser.emailVerified) {
                         console.log(
-                            '=====> THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT',
+                            '=====> THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT ==> cập nhật lại emailVerified',
                         );
+                        // cập nhật lại emailVerified
+                        const userId = currentUser.uid;
+                        const path = `users/${userId}`;
+                        firebaseUpdate(
+                            firebaseDatabaseRef(firebaseDatabase, path),
+                            {
+                                emailVerified: false,
+                                // ngu: 'NOT NGU',
+                            },
+                        )
+                            .then(() => {
+                                console.log(
+                                    '====>OKE: ĐÃ cập nhật lại emailVerified',
+                                );
+                            })
+                            .catch(() => {
+                                console.log(
+                                    '======>ERROR: K THỂ cập nhật lại emailVerified',
+                                );
+                            });
+
                         navigate('UITab');
                     } else {
                         console.log(
                             '=====> THẰNG NÀY ==== CHƯA ====  emailVerified  NÊN ===> OFF CHAT',
                         );
                     }
-                    // if (isRememberMe) {
-                    //     console.log(
-                    //         'CÓ isRememberMe: ',
-                    //         isRememberMe,
-                    //         ' NÊN CHO SANG CHAT',
-                    //     );
-                    //     navigate('UITab');
-                    // } else {
-                    //     console.log(
-                    //         'KHÔNG isRememberMe: ',
-                    //         isRememberMe,
-                    //         ' NÊN THÔI',
-                    //     );
-                    // }
                 });
             } else {
                 console.log(
