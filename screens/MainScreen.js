@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useId, useState, useContext, lazy} from 'react';
 import {
     Image,
     Text,
@@ -11,8 +11,23 @@ import {
     Button,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {
+    auth,
+    firebaseDatabase,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseSet,
+    firebaseDatabaseRef,
+    sendEmailVerification,
+    child,
+    get,
+    onValue, //reload when online DB changed
+    signInWithEmailAndPassword,
+} from '../firebase/firebase';
 import {images, icons, texts, colors, numbers} from '../constants/index';
+import UserContext from '../context/userContext';
 
 const imageSlidesShow = [
     images.slideShow1,
@@ -146,6 +161,7 @@ const stylesModal = StyleSheet.create({
 
 const MainScreen = props => {
     const [modalVisible, setModalVisible] = useState(false);
+    const {isRememberMe} = useContext(UserContext);
 
     const handleRegister = () => {
         navigate('Register');
@@ -166,6 +182,74 @@ const MainScreen = props => {
     // Navigation
     const {navigation, route} = props;
     const {navigate, goBack} = navigation;
+
+    useEffect(() => {
+        // Mục tiêu là đăng nhập tự động
+
+        onAuthStateChanged(auth, currentUser => {
+            if (currentUser) {
+                // const currentUser = auth.currentUser;
+                currentUser.reload().then(function () {
+                    console.log(
+                        ' RELOAD USER ===> USER emailVerified = ',
+                        currentUser.emailVerified,
+                        ' thằng ',
+                        currentUser.email,
+                    );
+                    console.log(
+                        ' LƯU USER VÀO DB : vì khi đăng ký thì thằng này lưu hộ ==========> ',
+                        currentUser,
+                    );
+                    const userId = currentUser.uid;
+                    const path = `users/${userId}`;
+                    AsyncStorage.setItem('user', JSON.stringify(currentUser));
+                    // save data to firebase
+                    firebaseSet(firebaseDatabaseRef(firebaseDatabase, path), {
+                        email: currentUser.email,
+                        emailVerified: currentUser.emailVerified,
+                        accessToken: currentUser.accessToken,
+                        userId: currentUser.uid,
+                    })
+                        .then(() => {
+                            console.log(
+                                '====> ĐÃ LƯU USER THÀNH CÔNG MAIN SCREEN',
+                            );
+                        })
+                        .catch(() => {
+                            console.log('K THỂ LƯU USER ');
+                        });
+                    if (currentUser.emailVerified) {
+                        console.log(
+                            '=====> THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT',
+                        );
+                        navigate('UITab');
+                    } else {
+                        console.log(
+                            '=====> THẰNG NÀY ==== CHƯA ====  emailVerified  NÊN ===> OFF CHAT',
+                        );
+                    }
+                    // if (isRememberMe) {
+                    //     console.log(
+                    //         'CÓ isRememberMe: ',
+                    //         isRememberMe,
+                    //         ' NÊN CHO SANG CHAT',
+                    //     );
+                    //     navigate('UITab');
+                    // } else {
+                    //     console.log(
+                    //         'KHÔNG isRememberMe: ',
+                    //         isRememberMe,
+                    //         ' NÊN THÔI',
+                    //     );
+                    // }
+                });
+            } else {
+                console.log(
+                    '=============CHƯA ĐĂNG NHẬP===========  auth.currentUser() == NULL',
+                );
+            }
+        });
+    }, []);
     return (
         <View
             style={{

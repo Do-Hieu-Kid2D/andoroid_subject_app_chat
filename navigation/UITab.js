@@ -9,6 +9,7 @@ import {
     Register,
     Chat,
     Setting,
+    Profile,
 } from '../screens/index';
 import {images, icons, texts, colors, numbers} from '../constants/index';
 
@@ -27,6 +28,8 @@ const screenOptions = ({route}) => ({
             iconSource = focused ? icons.chatActive : icons.chat;
         } else if (route.name === 'Setting') {
             iconSource = focused ? icons.settingActive : icons.setting;
+        } else if (route.name === 'Profile') {
+            iconSource = focused ? icons.user_active : icons.user;
         }
         return (
             <Image source={iconSource} style={{width: size, height: size}} />
@@ -37,6 +40,7 @@ function UITab() {
     return (
         <Tab.Navigator screenOptions={screenOptions}>
             <Tab.Screen name={'Chat'} component={Chat} />
+            <Tab.Screen name={'Profile'} component={Profile} />
             <Tab.Screen name={'Setting'} component={Setting} />
         </Tab.Navigator>
     );

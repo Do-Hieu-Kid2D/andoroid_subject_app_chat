@@ -6,4 +6,6 @@ export default {
     PLACEHOLDER: 'rgba(0,0,0,0.6)',
     MY_MESSAGE: 'rgba(255, 101, 54, 0.2)',
     OTHER_MESSAGE: 'rgba(128, 255, 128, 0.2)',
+    RED_BUTTON: 'rgba(204, 0, 0,0.8)',
+    GREEN_BUTTON: 'rgb(92, 214, 92)',
 };

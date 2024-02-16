@@ -11,21 +11,32 @@ import {
     Keyboard,
     FlatList,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 
+import {
+    auth,
+    firebaseDatabase,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+} from '../firebase/firebase';
 import {frontSize as sizeFont, images, colors, texts} from '../constants/index';
 import Login from './Login';
+import UserContext from '../context/userContext';
+import OkeModal from '../components/OkeModal';
 
 function Register(props) {
     const [isFocused, setIsFocused] = useState(false);
     const [isFocused1, setIsFocused1] = useState(false);
     const [isFocused2, setIsFocused2] = useState(false);
     const [email, setEmail] = useState('');
-    const [errorEmail, setErrorEmail] = useState();
     const [password, setPassword] = useState('');
+    const [errorEmail, setErrorEmail] = useState();
     const [errorPassword, setErrorPassword] = useState();
     const [errorRePassword, setErrorRePassword] = useState();
     const [statusButtonRegister, setStatusButtonRegister] = useState(false);
+    const {isNewUser} = useContext(UserContext);
+    const {setIsNewUser} = useContext(UserContext);
+    const [okeModalVisible, setOkeModalVisible] = useState(false);
 
     useEffect(() => {
         handleStatusButtonLoin();
@@ -61,7 +72,29 @@ function Register(props) {
         navigate(Login);
     };
     const handleRegister = () => {
-        Alert.alert('handleRegister');
+        console.log('handleRegister: ', email, ' ', password);
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+                const userNowRegister = userCredential.user;
+                sendEmailVerification(userNowRegister).then(() => {
+                    // setIsNewUser(true);
+                    setOkeModalVisible(true);
+
+                    console.log('=====> sendEmailVerification');
+                });
+                console.log(
+                    'VỪA ĐK 1 USER MỚI userNowRegister: ',
+                    userNowRegister,
+                );
+            })
+            .catch(error => {
+                console.log(
+                    "====> can't not Register, error: ",
+                    error.message,
+                    ' CODE ERROR:',
+                    error.code,
+                );
+            });
     };
     const handleNoRegister = () => {
         // Alert.alert('handleNoRegister Chưa đủ điều kiện rồi');
@@ -165,6 +198,7 @@ function Register(props) {
                                 },
                             ]}
                             placeholder="example@gmail.com"
+                            // value=""
                             placeholderTextColor={colors.PLACEHOLDER}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
@@ -192,7 +226,8 @@ function Register(props) {
                             secureTextEntry={true}
                             onFocus={handleFocus1}
                             onBlur={handleBlur1}
-                            onChangeText={handleEnterPass}></TextInput>
+                            onChangeText={handleEnterPass}
+                        />
                         <Text
                             style={[
                                 {textDecorationLine: 'underline'},
@@ -348,6 +383,27 @@ function Register(props) {
                             <Text></Text>
                         </View>
                     </View>
+                </View>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                    <OkeModal
+                        visible={okeModalVisible}
+                        content1={
+                            'Chúng tôi đã gửi yêu cầu xác nhận tới email: '
+                        }
+                        content2={email}
+                        content3={
+                            ' bạn cần xác nhận email để kích hoạt tài khoản thành công!'
+                        }
+                        onOke={() => {
+                            setOkeModalVisible(false);
+                            navigate('Login');
+                        }}
+                    />
                 </View>
             </View>
         </TouchableWithoutFeedback>

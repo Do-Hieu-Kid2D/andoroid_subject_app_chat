@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Image,
     Text,
@@ -12,6 +12,20 @@ import {
     SafeAreaView,
     FlatList,
 } from 'react-native';
+import {
+    auth,
+    firebaseDatabase,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    firebaseSet,
+    firebaseDatabaseRef,
+    sendEmailVerification,
+    child,
+    get,
+    onValue, //reload when online DB changed
+    signInWithEmailAndPassword,
+} from '../firebase/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
     images,
@@ -29,47 +43,55 @@ import ChatItem from '../components/ChatItem';
 function Chat(props) {
     const {numberOfStar} = props;
     const [users, setUsers] = useState([
-        {
-            url: 'https://randomuser.me/api/portraits/men/67.jpg',
-            name: 'Trần Văn Nam',
-            message: 'Hello, How are you?',
-            firstMessage: 'Hello, How are you?',
-            numberOfUnreadMessages: 9,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/women/68.jpg',
-            name: 'Nguyễn Thị Hằng',
-            message: 'Hello, How are you?',
-            firstMessage: 'Hello, How are you?',
-            numberOfUnreadMessages: 19,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/men/69.jpg',
-            name: 'Hoàng Văn Hùng',
-            firstMessage: 'Hello, How are you?',
-            message: 'Hello, How are you?',
-            numberOfUnreadMessages: 9,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/women/70.jpg',
-            name: 'Lê Thị Mai',
-            message: 'Hello, How are you?',
-            firstMessage: 'Hello, How are you?',
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/women/67.jpg',
-            name: 'Vũ Thị Hà',
-            message: 'Hello, How are you?',
-            firstMessage: 'Hello, How are you?',
-        },
+        // {
+        //     url: 'https://randomuser.me/api/portraits/men/67.jpg',
+        //     name: 'Trần Văn Nam',
+        //     message: 'Hello, How are you?',
+        //     numberOfUnreadMessages: 9,
+        // }
     ]);
+
+    useEffect(() => {
+        // Hàm lắng nghe thay đổi trong cây user
+        onValue(
+            firebaseDatabaseRef(firebaseDatabase, 'users'),
+            async snapshot => {
+                // debugger;
+                if (snapshot.exists()) {
+                    console.log(
+                        '========> Có sự thay đổi trên cây USERS hoặc mount componet Chat.js ================',
+                    );
+                    let snapshotObject = snapshot.val();
+                    let stringUser = await AsyncStorage.getItem('user');
+                    let myUserId = JSON.parse(stringUser).uid;
+                    const listUsers = Object.keys(snapshotObject)
+                        .filter(eachKeyObj => eachKeyObj != myUserId) // lọc bản thân mk ra
+                        .map(eachKeyObj => {
+                            let eachObjectDetail = snapshotObject[eachKeyObj];
+                            return {
+                                url: 'https://randomuser.me/api/portraits/men/67.jpg',
+                                name: eachObjectDetail['email'],
+                                email: eachObjectDetail.email,
+                                accessToken: eachObjectDetail.accessToken,
+                                numberOfUnreadMessages: 0,
+                                userId: eachKeyObj,
+                            };
+                        });
+                    // console.log('listUsers :', listUsers);
+                    setUsers(listUsers);
+                } else {
+                    console.log('No data available');
+                }
+            },
+        );
+    }, []);
 
     const onPressRightIcon = () => {
         Alert.alert('onPressRightIcon');
     };
 
     const onPressLeftIcon = () => {
-        Alert.alert('onPressLeftIcon');
+        Alert.alert('onPressLeftIcon khả năng cho nút đăng xuất');
     };
 
     const handleTrash = () => {
@@ -82,7 +104,7 @@ function Chat(props) {
         <View style={{flexDirection: 'column'}}>
             {/* ===== HEADER ====== */}
             <UIHeader
-                title={'Noti ddd'}
+                title={texts.NAME_APP}
                 leftIconName={images.left_arrow}
                 rightIconName={images.search}
                 onPressRightIcon={onPressRightIcon}
@@ -127,7 +149,7 @@ function Chat(props) {
                             user={item}
                             key={item.url}
                             onPress={() => {
-                               navigate('Messenger', {user: item});
+                                navigate('Messenger', {user: item});
                             }}
                         />
                     );

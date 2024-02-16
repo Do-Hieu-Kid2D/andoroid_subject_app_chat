@@ -5,5 +5,6 @@ import Register from './Register';
 import Chat from './Chat';
 import Setting from './Setting';
 import Messenger from './Messenger';
+import Profile from './Profile';
 
-export {MainScreen, Login, Test, Register, Chat, Setting, Messenger};
+export {MainScreen, Login, Test, Register, Chat, Setting, Messenger, Profile};

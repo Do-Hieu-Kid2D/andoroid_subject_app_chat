@@ -11,7 +11,17 @@ import {
     Button,
     SafeAreaView,
     FlatList,
+    TextInput,
+    Keyboard,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+    auth,
+    onAuthStateChanged,
+    firebaseDatabaseRef,
+    firebaseSet,
+    firebaseDatabase,
+} from '../firebase/firebase';
 
 import {
     images,
@@ -28,6 +38,7 @@ import MessengerItem from '../components/MessengerItem';
 
 function Messenger(props) {
     const {numberOfStar} = props;
+    const [typedText, setTypedText] = useState('');
     const [chatHistory, setChatHistory] = useState([
         {
             url: 'https://randomuser.me/api/portraits/men/70.jpg',
@@ -38,41 +49,10 @@ function Messenger(props) {
         },
         {
             url: 'https://randomuser.me/api/portraits/men/70.jpg',
-            showUrl: false,
-            isSender: true,
+            showUrl: true,
+            isSender: false,
             messenger: 'How are you ?',
             timestamp: 1641654298000,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/men/70.jpg',
-            showUrl: false,
-            isSender: true,
-            messenger:
-                'If you are new to mobile development, the easiest way to get started is with Expo Go',
-            timestamp: 1641654538000,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/men/50.jpg',
-            showUrl: true,
-            isSender: false,
-            messenger:
-                'Expo is a set of tools and services built around React Native and, while it has many features, the most relevant feature for us right now is that it can get you writing a React Native app within minutes',
-            timestamp: 1641654598000,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/men/50.jpg',
-            showUrl: false,
-            isSender: false,
-            messenger: 'I am fine',
-            timestamp: 1641654598000,
-        },
-        {
-            url: 'https://randomuser.me/api/portraits/men/70.jpg',
-            showUrl: true,
-            isSender: true,
-            messenger:
-                'Expo is a set of tools and services built around React Native and, while it has many features, the most relevant feature for us right now is that it can get you writing a React Native app within minutes',
-            timestamp: 1641654778000,
         },
     ]);
 
@@ -84,6 +64,44 @@ function Messenger(props) {
     };
     const onPressLeftIcon = () => {
         goBack();
+    };
+
+    const handleSend = async () => {
+        // Alert.alert(typedText);
+        if (typedText.trim().length == 0) {
+            return;
+        }
+        //"My id send - Guest id receive": {messenger send}
+        let newMessengerObject = {
+            url: 'https://randomuser.me/api/portraits/men/78.jpg',
+            showUrl: true,
+            // isSender: true,
+            messenger: typedText,
+            timestamp: new Date().getTime(),
+        };
+        // stringUser user đang đăng nhập nè , lưu local khi login
+        let stringUser = await AsyncStorage.getItem('user');
+        let myUserId = JSON.parse(stringUser).uid;
+        // let myFriendUserId = props.route.params.user.userId;
+        // lấy từ prop từ componet chat render trong flatlisst
+        let myFriendUserId = userId;
+        console.log(
+            '=====> New chat: ',
+            myUserId,
+            ' ----vs---- ',
+            myFriendUserId,
+        );
+        // Save mess to firebase
+        firebaseSet(
+            firebaseDatabaseRef(
+                firebaseDatabase,
+                `chats/${myUserId}-vs-${myFriendUserId}`,
+            ),
+            newMessengerObject,
+        ).then(() => {
+            setTypedText('');
+            // Keyboard.dismiss();
+        });
     };
 
     return (
@@ -117,6 +135,48 @@ function Messenger(props) {
                     />
                 )}
             />
+
+            {/* Thanh nhắn tin*/}
+            <View
+                style={{
+                    height: 50,
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    backgroundColor: 'green',
+                }}>
+                <TextInput
+                    onChangeText={typedText => {
+                        setTypedText(typedText);
+                    }}
+                    style={{
+                        color: colors.LETTER,
+                        paddingStart: 12,
+                    }}
+                    placeholder="Enter your message here"
+                    value={typedText}
+                    placeholderTextColor={colors.placeholder}
+                />
+                <TouchableOpacity
+                    style={{
+                        padding: 10,
+                        // backgroundColor: 'red',
+                        paddingLeft: 15,
+                    }}
+                    onPress={handleSend}>
+                    <Image
+                        style={{
+                            height: 24,
+                            width: 24,
+                        }}
+                        source={icons.send}
+                    />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
