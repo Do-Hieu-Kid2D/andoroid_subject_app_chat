@@ -37,7 +37,7 @@ const imageSlidesShow = [
 ];
 
 const ModalCustom = ({visible, onClose}) => {
-    const [modalVisible, setModalVisible] = useState(false);
+    // const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <Modal
@@ -200,28 +200,27 @@ const MainScreen = props => {
                         console.log(
                             '=====>OKE THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT ',
                         );
-                        // cập nhật lại emailVerified
-                        const userId = currentUser.uid;
-                        const path = `users/${userId}`;
-                        firebaseUpdate(
-                            firebaseDatabaseRef(firebaseDatabase, path),
-                            {
-                                emailVerified: false,
-                                // ngu: 'NOT NGU',
-                            },
-                        )
-                            .then(() => {
-                                console.log(
-                                    '====>OKE: ĐÃ cập nhật lại emailVerified',
-                                );
-                            })
-                            .catch(() => {
-                                console.log(
-                                    '======>ERROR: K THỂ cập nhật lại emailVerified',
-                                );
-                            });
-
                         navigate('UITab');
+                        // cập nhật lại emailVerified
+                        // const userId = currentUser.uid;
+                        // const path = `users/${userId}`;
+                        // firebaseUpdate(
+                        //     firebaseDatabaseRef(firebaseDatabase, path),
+                        //     {
+                        //         emailVerified: false,
+                        //         // ngu: 'NOT NGU',
+                        //     },
+                        // )
+                        //     .then(() => {
+                        //         console.log(
+                        //             '====>OKE: ĐÃ cập nhật lại emailVerified',
+                        //         );
+                        //     })
+                        //     .catch(() => {
+                        //         console.log(
+                        //             '======>ERROR: K THỂ cập nhật lại emailVerified',
+                        //         );
+                        //     });
                     } else {
                         console.log(
                             '=====> THẰNG NÀY ==== CHƯA ====  emailVerified  NÊN ===> OFF CHAT',

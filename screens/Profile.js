@@ -261,9 +261,7 @@ export default function Profile() {
                                 borderWidth: 4,
                             }}
                             source={{
-                                uri: user.showUrl
-                                    ? user.showUrl
-                                    : 'https://kenh14cdn.com/203336854389633024/2023/7/8/photo-8-16888099647611685495690.jpg',
+                                uri: user.showUrl ? user.showUrl : texts.urlDefault,
                             }}
                         />
                     </View>

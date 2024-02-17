@@ -26,6 +26,9 @@ import {
     firebaseGet,
     onValue, //reload when online DB changed
     signInWithEmailAndPassword,
+    orderByKey,
+    limitToFirst,
+    query,
 } from '../firebase/firebase';
 import {frontSize as sizeFont, images, colors, texts} from '../constants/index';
 import Login from './Login';
@@ -82,7 +85,7 @@ function Register(props) {
     const handleRegister = () => {
         console.log('=======> handleRegister: ', email, ' ', password);
         createUserWithEmailAndPassword(auth, email, password)
-            .then(userCredential => {
+            .then(async userCredential => {
                 const userNowRegister = userCredential.user;
                 sendEmailVerification(userNowRegister).then(() => {
                     // setIsNewUser(true);
@@ -90,17 +93,6 @@ function Register(props) {
                     console.log('=====>??? sendEmailVerification');
                 });
                 console.log('=====>OKE: VỪA ĐK 1 USER MỚI userNowRegister: ');
-                AsyncStorage.setItem('user', JSON.stringify(userNowRegister))
-                    .then(() => {
-                        console.log(
-                            '=====>OKE: SET USERNEW VỪA ĐĂNG KÝ VÀO AsyncStorage THÀNH CÔNG',
-                        );
-                    })
-                    .catch(() => {
-                        console.log(
-                            '=====>ERROR: SET USER NEW VỪA ĐĂNG KÝ VÀO AsyncStorage K ĐƯỢC ',
-                        );
-                    });
                 // save data to firebase
                 console.log('=====>OKE: LƯU USER VÀO DB :', userNowRegister);
                 const userId = userNowRegister.uid;
@@ -116,13 +108,95 @@ function Register(props) {
                         );
                     })
                     .catch(() => {
-                        console.log(
+                        console.error(
                             '======>ERROR: K THỂ LƯU USER KHI REGISTER',
                         );
                     });
+
+                // Tạo bảng chat
+                // lấy full user trong hệ thống đã
+                // trỏ tới thằng user
+                const usersRef = firebaseDatabaseRef(firebaseDatabase, 'users');
+                const keyUsers = [];
+                try {
+                    // Lấy dữ liệu từ node 'users' với giới hạn là 1 phần tử đầu tiên
+                    const snapshot = await firebaseGet(
+                        query(usersRef, orderByKey()),
+                    );
+                    if (snapshot.exists()) {
+                        // Lấy giá trị của phần tử đầu tiên
+                        // const userData = snapshot.val();
+                        let x = 0;
+                        snapshot.forEach(childSnapshot => {
+                            const childKey = childSnapshot.key;
+                            keyUsers.push(childKey);
+                            console.log(
+                                `CÁC USER HIỆN CÓ ${x + 1}: `,
+                                childKey,
+                            );
+                            x++;
+                        });
+                        console.log(
+                            '========>OKE MỚI ĐĂNG KÝ 1 THẰNG MỚI CẦN LẤY ĐỂ CONFIG LẠI BẲNG CHAT, TỔNG TẤT CẢ = ',
+                            x,
+                        );
+                    } else {
+                        console.error('=====>ERROR K THẤY BẢNG USER');
+                    }
+                } catch (error) {
+                    console.error(
+                        '=====>ERROR KHI LẤY DỮ LIỆU TẤT CẢ USER',
+                        error,
+                    );
+                }
+                // CÓ MẢNG KEY RỒI
+                /// Key của mk có trong : userId;
+                console.log(
+                    '======> ĐĂNG KÝ CHAT userId: ',
+                    userId,
+                    ' VỚI TOÀN THỂ BÀ CON',
+                );
+                // Đăng ký chat với bà con thôi!
+                // const chatsRef = firebaseDatabaseRef(firebaseDatabase, 'chats');
+                keyUsers
+                    .filter(eachKeyObj => eachKeyObj != userId)
+                    .forEach(keyUser => {
+                        const keyChat = `${userId}--vs--${keyUser}`;
+                        const path = `chats/${keyChat}`;
+                        // Lấy thời gian hiện tại
+                        const currentTime = new Date();
+                        const day = currentTime.getDate();
+                        const month = currentTime.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
+                        const year = currentTime.getFullYear();
+                        const hours = currentTime.getHours();
+                        const minutes = currentTime.getMinutes();
+                        const seconds = currentTime.getSeconds();
+                        // Định dạng lại theo định dạng bạn mong muốn
+                        const timeNow = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+                        firebaseSet(
+                            firebaseDatabaseRef(firebaseDatabase, path),
+                            {
+                                createAt: timeNow,
+                            },
+                        )
+                            .then(() => {
+                                console.log(
+                                    '======> ',
+                                    timeNow,
+                                    ' ĐÃ ĐĂNG KÝ CHAT : ',
+                                    keyChat,
+                                );
+                            })
+                            .catch(() => {
+                                console.error(
+                                    '======>ERROR: K THỂ ĐĂNG KÝ CHAT : ',
+                                    keyChat,
+                                );
+                            });
+                    });
             })
             .catch(error => {
-                console.log(
+                console.error(
                     '====>ERROR: KHÔNG THỂ ĐĂNG KÝ: ',
                     error.message,
                     ' CODE ERROR:',

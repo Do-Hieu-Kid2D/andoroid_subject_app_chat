@@ -95,7 +95,7 @@ function ChatItem(props) {
                         fontSize: sizeFont.h6 * 0.8,
                         marginRight: 10,
                     }}>
-                    4 minutes ago
+                    Leave? codding...
                 </Text>
             </View>
         </TouchableOpacity>

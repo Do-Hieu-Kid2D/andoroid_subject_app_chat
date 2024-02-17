@@ -67,6 +67,7 @@ function MessengerItem(props) {
                     width: numbers.DEVICE_WIDTH * 0.7,
                     flexDirection: 'row',
                     // backgroundColor: 'red',
+                    marginBottom: 6,
                 }}>
                 <View>
                     <Text
@@ -103,6 +104,7 @@ function MessengerItem(props) {
                     maxWidth: numbers.DEVICE_WIDTH * 0.7,
                     marginEnd: 50,
                     // backgroundColor: 'green',
+                    marginBottom: 6,
                 }}>
                 {/* <View style={{width: 40, backgroundColor: 'yellow'}}></View> */}
                 <View>

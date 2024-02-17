@@ -10,7 +10,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
 } from 'react-native';
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 
 import {signInWithEmailAndPassword, auth} from '../firebase/firebase';
 import {frontSize as sizeFont, images, colors, texts} from '../constants/index';
@@ -28,6 +28,35 @@ function Login(props) {
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const {isRememberMe} = useContext(UserContext);
     const {setIsRememberMe} = useContext(UserContext);
+
+    useEffect(() => {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+            // const currentUser = auth.currentUser;
+            currentUser.reload().then(function () {
+                console.log(
+                    '=====> RELOAD USER ===> USER CHECK emailVerified = ',
+                    currentUser.emailVerified,
+                    ' thằng ',
+                    currentUser.email,
+                );
+                if (currentUser.emailVerified) {
+                    console.log(
+                        '=====>OKE THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT ',
+                    );
+                    navigate('UITab');
+                } else {
+                    console.log(
+                        '=====> THẰNG NÀY ==== CHƯA ====  emailVerified  NÊN ===> OFF CHAT',
+                    );
+                }
+            });
+        } else {
+            console.log(
+                '=============CHƯA ĐĂNG NHẬP===========  auth.currentUser() == NULL',
+            );
+        }
+    }, []);
 
     const handlePress = () => {
         Keyboard.dismiss(); // Ẩn bàn phím khi người dùng chạm vào vùng không phải là TextInput
@@ -89,7 +118,7 @@ function Login(props) {
     };
 
     const handleForgotPasswordPress = () => {
-        Alert.alert('handleForgotPasswordPress');
+        Alert.alert('Codding...');
     };
 
     // Navigation

@@ -475,7 +475,7 @@ function Settings(props) {
                             alignItems: 'center',
                         }}
                         onPress={() => {
-                            Alert.alert('codding');
+                            Alert.alert('codding...');
                         }}>
                         <Image
                             source={icons.email}
@@ -504,7 +504,7 @@ function Settings(props) {
                             alignItems: 'center',
                         }}
                         onPress={() => {
-                            Alert.alert('codding');
+                            Alert.alert('codding...');
                         }}>
                         <Image
                             source={icons.phone}
