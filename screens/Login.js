@@ -62,7 +62,7 @@ function Login(props) {
 
                 if (userLogin.emailVerified) {
                     console.log(
-                        '======> user log in success => REDIRECT SANG BÊN CHAT , SET ISNEWUSER = FALSE: ',
+                        '======> user log in success => REDIRECT SANG BÊN CHAT  ',
                         userLogin,
                     );
                     navigate('UITab');

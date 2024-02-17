@@ -53,3 +53,24 @@ export {
     signInWithEmailAndPassword,
     firebaseUpdate,
 };
+
+// cập nhật lại emailVerified
+// const userId = currentUser.uid;
+// const path = `users/${userId}`;
+// firebaseUpdate(
+//     firebaseDatabaseRef(firebaseDatabase, path),
+//     {
+//         emailVerified: false,
+//         // ngu: 'NOT NGU',
+//     },
+// )
+//     .then(() => {
+//         console.log(
+//             '====>OKE: ĐÃ cập nhật lại emailVerified',
+//         );
+//     })
+//     .catch(() => {
+//         console.log(
+//             '======>ERROR: K THỂ cập nhật lại emailVerified',
+//         );
+//     });

@@ -23,4 +23,6 @@ export default {
     fingerprint: require('../asset/icon/fingerprint.png'),
     like: require('../asset/icon/like.png'),
     valentine: require('../asset/icon/valentine.png'),
+    pencil: require('../asset/icon/pencil.png'),
+    pencil_white: require('../asset/icon/pencil_white.png'),
 };

@@ -162,7 +162,6 @@ const stylesModal = StyleSheet.create({
 
 const MainScreen = props => {
     const [modalVisible, setModalVisible] = useState(false);
-    const {isRememberMe} = useContext(UserContext);
 
     const handleRegister = () => {
         navigate('Register');
@@ -199,7 +198,7 @@ const MainScreen = props => {
                     );
                     if (currentUser.emailVerified) {
                         console.log(
-                            '=====> THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT ==> cập nhật lại emailVerified',
+                            '=====>OKE THẰNG NÀY emailVerified RỒI NÊN CHO NÓ CHAT ',
                         );
                         // cập nhật lại emailVerified
                         const userId = currentUser.uid;

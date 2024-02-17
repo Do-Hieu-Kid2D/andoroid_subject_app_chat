@@ -62,8 +62,7 @@ function Chat(props) {
                         '========> Có sự thay đổi trên cây USERS hoặc mount componet Chat.js ================',
                     );
                     let snapshotObject = snapshot.val();
-                    let stringUser = await AsyncStorage.getItem('user');
-                    let myUserId = JSON.parse(stringUser).uid;
+                    const myUserId = auth.currentUser.uid;
                     const listUsers = Object.keys(snapshotObject)
                         .filter(eachKeyObj => eachKeyObj != myUserId) // lọc bản thân mk ra
                         .map(eachKeyObj => {

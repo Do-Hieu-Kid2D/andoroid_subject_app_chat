@@ -4,10 +4,10 @@ import React, {createContext, useState} from 'react';
 const UserContext = createContext();
 
 export const UserProvider = ({children}) => {
-    const [isRememberMe, setIsRememberMe] = useState(false);
+    const [urlProfile, setUrlProfile] = useState('');
 
     return (
-        <UserContext.Provider value={{isRememberMe, setIsRememberMe}}>
+        <UserContext.Provider value={{urlProfile, setUrlProfile}}>
             {children}
         </UserContext.Provider>
     );

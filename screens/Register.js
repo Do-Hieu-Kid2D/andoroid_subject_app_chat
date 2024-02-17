@@ -107,7 +107,6 @@ function Register(props) {
                 const path = `users/${userId}`;
                 firebaseSet(firebaseDatabaseRef(firebaseDatabase, path), {
                     email: userNowRegister.email,
-                    emailVerified: userNowRegister.emailVerified,
                     accessToken: userNowRegister.accessToken,
                     userId: userNowRegister.uid,
                 })
@@ -237,7 +236,8 @@ function Register(props) {
                             placeholderTextColor={colors.PLACEHOLDER}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
-                            onChangeText={handleEmailChange}></TextInput>
+                            onChangeText={handleEmailChange}
+                        />
                         <Text
                             style={[
                                 {textDecorationLine: 'underline'},
@@ -286,7 +286,8 @@ function Register(props) {
                             secureTextEntry={true}
                             onFocus={handleFocus2}
                             onBlur={handleBlur2}
-                            onChangeText={handleReEnterPass}></TextInput>
+                            onChangeText={handleReEnterPass}
+                        />
                         <Text
                             style={[
                                 {textDecorationLine: 'underline'},
