@@ -34,6 +34,7 @@ import {frontSize as sizeFont, images, colors, texts} from '../constants/index';
 import Login from './Login';
 import UserContext from '../context/userContext';
 import OkeModal from '../components/OkeModal';
+import ErrorModalRegister from '../components/ErrorModalRegister';
 
 function Register(props) {
     const [isFocused, setIsFocused] = useState(false);
@@ -48,6 +49,7 @@ function Register(props) {
     const {isNewUser} = useContext(UserContext);
     const {setIsNewUser} = useContext(UserContext);
     const [okeModalVisible, setOkeModalVisible] = useState(false);
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
 
     useEffect(() => {
         handleStatusButtonLoin();
@@ -189,7 +191,7 @@ function Register(props) {
                             })
                             .catch(() => {
                                 console.error(
-                                    '======>ERROR: K THỂ ĐĂNG KÝ CHAT : ',
+                                    '======>ERROR: K THỂ ĐĂNG KÝ CHAT VỚI BÀ CON ??? : ',
                                     keyChat,
                                 );
                             });
@@ -202,6 +204,7 @@ function Register(props) {
                     ' CODE ERROR:',
                     error.code,
                 );
+                setErrorModalVisible(true);
             });
     };
     const handleNoRegister = () => {
@@ -512,6 +515,14 @@ function Register(props) {
                         onOke={() => {
                             setOkeModalVisible(false);
                             navigate('Login');
+                        }}
+                    />
+                    <ErrorModalRegister
+                        visible={errorModalVisible}
+                        header={'Lỗi khi đăng ký'}
+                        content2={'Có thể email này đã được sử dụng rồi!'}
+                        onError={() => {
+                            setErrorModalVisible(false);
                         }}
                     />
                 </View>
