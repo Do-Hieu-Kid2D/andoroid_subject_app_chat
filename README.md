@@ -7,7 +7,7 @@
 ### 🚩VERSION 1: 18/2/2024
 
 ** Image App Chat **
-![Image Alt Text](iMageReadMe/1.jpg)
+![Image Alt Text](iMageReadMe/1.jpg){height="200px"}
 ![Image Alt Text](iMageReadMe/2.jpg)
 ![Image Alt Text](iMageReadMe/2_5.jpg)
 ![Image Alt Text](iMageReadMe/3.jpg)
