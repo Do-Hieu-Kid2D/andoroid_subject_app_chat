@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Text, View} from 'react-native';
 
 import {Login, MainScreen, Test, Register, Messenger} from '../screens/index';
 import {NavigationContainer} from '@react-navigation/native';
@@ -26,5 +25,6 @@ function App() {
         </UserProvider>
     );
 }
+// npx react-native build-android --mode=release
 
 export default App;
