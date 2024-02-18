@@ -6,18 +6,19 @@
 
 ### 🚩VERSION 1: 18/2/2024
 
-** Image App Chat **
-<img src="iMageReadMe/1.jpg" height="200px">
-![Image Alt Text](iMageReadMe/2.jpg)
-![Image Alt Text](iMageReadMe/2_5.jpg)
-![Image Alt Text](iMageReadMe/3.jpg)
-![Image Alt Text](iMageReadMe/4.jpg)
-![Image Alt Text](iMageReadMe/5.jpg)
-![Image Alt Text](iMageReadMe/6.jpg)
-![Image Alt Text](iMageReadMe/7.jpg)
-![Image Alt Text](iMageReadMe/7_5.jpg)
-![Image Alt Text](iMageReadMe/8.jpg)
-![Image Alt Text](iMageReadMe/9.jpg)
-![Image Alt Text](iMageReadMe/10.jpg)
-![Image Alt Text](iMageReadMe/11.jpg)
-![Image Alt Text](iMageReadMe/12.jpg)
+### Image App Chat
+
+<img src="iMageReadMe/1.jpg" height="600px">
+<img src="iMageReadMe//2.jpg" height="600px">
+<img src="iMageReadMe//2_5.jpg" height="600px">
+<img src="iMageReadMe//3.jpg" height="600px">
+<img src="iMageReadMe//4.jpg" height="600px">
+<img src="iMageReadMe//5.jpg" height="600px">
+<img src="iMageReadMe//6.jpg" height="600px">
+<img src="iMageReadMe//7.jpg" height="600px">
+<img src="iMageReadMe//7_5.jpg" height="600px">
+<img src="iMageReadMe//8.jpg" height="600px">
+<img src="iMageReadMe//9.jpg" height="600px">
+<img src="iMageReadMe//10.jpg" height="600px">
+<img src="iMageReadMe//11.jpg" height="600px">
+<img src="iMageReadMe//12.jpg" height="600px">
